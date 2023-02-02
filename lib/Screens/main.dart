@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 // }
 
 void main() {
-  runApp(MaterialApp(home: Scaffold(body: AddInfo())));
+  runApp(MaterialApp(home: Scaffold(body: menuList())));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/1', page: () => HomePage(title: '')),
         GetPage(name: '/2', page: () => AddList()),
         GetPage(name: '/3', page: () => TakeRcp()),
-        GetPage(name: '/4', page: () => AddInfo()),
+        GetPage(name: '/4', page: () => menuList()),
         GetPage(name: '/5', page: () => Calculate()),
       ],
       debugShowCheckedModeBanner: false,
