@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
 
 class addName extends StatefulWidget {
-  addName({Key? key, required this.namelist, this.change, this.selected}) : super(key: key);
-  List<String> namelist;
+  addName({Key? key, this.count, required this.nameLabel, required this.namelist, this.change, required this.selected}) : super(key: key);
+  var namelist;
+  var nameLabel;
   var change;
-  String? selected;
+  var count;
+  var selected;
 
 
   @override
@@ -19,7 +21,8 @@ class _addNameState extends State<addName> {
   final droplist = [];
   var change;
   var s;
-  String? selected;
+  late String selected;
+  var nameLabel;
 
 
   //String dropdownValue = '재원';
@@ -78,9 +81,8 @@ class _addNameState extends State<addName> {
                   setState(() {
                     dropdownValue = value!;
                     //change(dropdownValue);   //-----여기서 오류 발생
-                    selected = dropdownValue;      // onchange를 통해 바뀐 값을 addDialog에 전달해야함
-                    print(selected);
-                    //change(s);
+                    //selected = dropdownValue;      // onchange를 통해 바뀐 값을 addDialog에 전달해야함
+                    print(dropdownValue);
                   });
                 }
             ),
@@ -91,10 +93,14 @@ class _addNameState extends State<addName> {
               ElevatedButton(
                 child: Text("선택완료"),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => menuList()),
-                  );
+                  setState(() {
+                    widget.count++;
+                    selected = dropdownValue;
+                    print("추가된 selected값은 ${selected}");
+                    widget.nameLabel.add(selected);
+                  });
+                  //change(selected);
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(90, 35),
@@ -104,7 +110,6 @@ class _addNameState extends State<addName> {
                     primary: Colors.blueGrey
                 ),
               ),
-
             ],
           ),
         ),
