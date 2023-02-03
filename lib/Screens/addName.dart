@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
 
 class addName extends StatefulWidget {
-  addName({Key? key, this.count, required this.nameLabel, required this.namelist, this.change, required this.selected}) : super(key: key);
+  addName({Key? key, this.count, required this.nameLabel, required this.namelist, this.change, required this.selected, this.addCount}) : super(key: key);
   var namelist;
   var nameLabel;
   var change;
   var count;
   var selected;
-
+  var addCount;
 
   @override
   State<addName> createState() => _addNameState();
@@ -20,7 +20,7 @@ class _addNameState extends State<addName> {
   var dropdownValue;
   final droplist = [];
   var change;
-  var s;
+  var s = 0;
   late String selected;
   var nameLabel;
 
@@ -94,9 +94,10 @@ class _addNameState extends State<addName> {
                 child: Text("선택완료"),
                 onPressed: () {
                   setState(() {
-                    widget.count++;
+                    widget.addCount();
+                    //widget.count++;
                     selected = dropdownValue;
-                    print("추가된 selected값은 ${selected}");
+                    print("추가된 selected값은 ${selected}, count값은 ${widget.count}");
                     widget.nameLabel.add(selected);
                   });
                   //change(selected);

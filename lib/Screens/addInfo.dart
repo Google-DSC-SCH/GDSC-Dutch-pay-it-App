@@ -170,7 +170,7 @@ class _menuListState extends State<menuList> {
                                         ),
                                         // 구성원 추가 버튼
                                         Container(
-                                          decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+                                          //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
                                           margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                                           width: 20,
                                           height: 20,
@@ -178,7 +178,7 @@ class _menuListState extends State<menuList> {
                                                onPressed: () {
                                                  Navigator.push(
                                                    context,
-                                                   MaterialPageRoute(builder: (context) => addName(count:count, nameLabel:nameLabel, namelist:namelist, change:change, selected:selected)),
+                                                   MaterialPageRoute(builder: (context) => addName(count:count, nameLabel:nameLabel, namelist:namelist, change:change, selected:selected, addCount:addCount)),
                                                  );
                                                },
                                                child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
@@ -228,7 +228,12 @@ class _menuListState extends State<menuList> {
               ),
               child:
               Center(
-                  child: Text('${nameLabel[i]}', style: TextStyle(color: Colors.white, fontSize: 11),))
+                  child: Text(
+                    '${nameLabel[i]}',
+                    //'${count+1}',
+                    style: TextStyle(color: Colors.white, fontSize: 11),
+                  )
+              )
           );
         }
     );
