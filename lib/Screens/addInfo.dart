@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:dutch_pay_it/Screens/calculate.dart';
 import 'package:dutch_pay_it/Model/object.dart';
 import 'package:dutch_pay_it/Screens/addName.dart';
+import 'package:dutch_pay_it/Screens/addlist.dart';
 
 class menuList extends StatefulWidget {
-  const menuList({Key? key}) : super(key: key);
+  menuList({Key? key, required this.peoplelist}) : super(key: key);
+  List<String> peoplelist;
 
   @override
   State<menuList> createState() => _menuListState();
@@ -18,6 +20,8 @@ class _menuListState extends State<menuList> {
   //var selectedName;
   var count = 0;
   var itemcount = 0;
+  //late List<dynamic> peoplelist;
+  //final peoplelist;
 
   List<dynamic> menuInfo = [['소주', 6, 30000], ['안주', 1, 20000], ['맥주', 1, 5000]];
   String shop = '식당이름';
@@ -178,7 +182,7 @@ class _menuListState extends State<menuList> {
                                                onPressed: () {
                                                  Navigator.push(
                                                    context,
-                                                   MaterialPageRoute(builder: (context) => addName(count:count, nameLabel:nameLabel, namelist:namelist, change:change, selected:selected, addCount:addCount)),
+                                                   MaterialPageRoute(builder: (context) => addName(peoplelist:widget.peoplelist, count:count, nameLabel:nameLabel, namelist:namelist, change:change, selected:selected, addCount:addCount)),
                                                  );
                                                },
                                                child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
