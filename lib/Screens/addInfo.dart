@@ -31,7 +31,7 @@ class _menuListState extends State<menuList> {
   TextEditingController _priceController = new TextEditingController(text: '10000' + '원');
   TextEditingController _countController = new TextEditingController(text: '1' + '개');
 
-  final namelist = ['재원', '채민', '하늘','민혁'];
+  List<String> namelist = ['재원', '채민', '하늘','민혁'];
   String? dropdownValue;
   String? selected;
 
@@ -210,7 +210,7 @@ class _menuListState extends State<menuList> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children:<Widget>[
-                Dropdown()
+                Dropdown(namelist:namelist)
                 //Text("안녕")
               ]
             ),
@@ -348,21 +348,30 @@ class buttonBox extends StatelessWidget {
 }
 
 class Dropdown extends StatefulWidget {
-  Dropdown({Key? key}) : super(key: key);
+  Dropdown({Key? key, required this.namelist}) : super(key: key);
+  List<String> namelist;
 
   @override
   State<Dropdown> createState() => _DropdownState();
 }
 
 class _DropdownState extends State<Dropdown> {
-  final namelist = ['재원', '채민', '하늘','민혁'];
-  String? dropdownValue;
+  //final namelist = ['재원', '채민', '하늘','민혁'];
+  var dropdownValue;
+  final droplist = [];
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      dropdownValue = namelist[0];
+      dropdownValue = widget.namelist[0];
+      print('dropdown 초기 값은 ${dropdownValue}');
+      for (int i=0; i<widget.namelist.length; i++) {
+        print('부모로부터 전송받은 namelist:  ${widget.namelist[i]}');
+      }
+      for (int i = 0; i < widget.namelist.length; i++) {
+        droplist.add(widget.namelist[i]);     // 전달받은 list값을 복사
+      }
     });
   }
 
@@ -371,7 +380,7 @@ class _DropdownState extends State<Dropdown> {
     return DropdownButton(
         isExpanded: true,
         value: dropdownValue,
-        items: namelist.map((e) => DropdownMenuItem(
+        items: droplist.map((e) => DropdownMenuItem(
           value: e,
           child: Text(e),
         )).toList(),
