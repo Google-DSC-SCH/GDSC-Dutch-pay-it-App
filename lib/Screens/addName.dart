@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
 
 class addName extends StatefulWidget {
-  addName({Key? key, this.count, required this.nameLabel, required this.namelist, this.change, required this.selected, this.addCount}) : super(key: key);
+  addName({Key? key, required this.peoplelist, this.count, required this.nameLabel, required this.namelist, this.change, required this.selected, this.addCount}) : super(key: key);
   var namelist;
   var nameLabel;
   var change;
   var count;
   var selected;
   var addCount;
+  List<String> peoplelist;
 
   @override
   State<addName> createState() => _addNameState();
@@ -18,11 +19,12 @@ class addName extends StatefulWidget {
 class _addNameState extends State<addName> {
   //final namelist = ['재원', '채민', '하늘','민혁'];
   var dropdownValue;
-  final droplist = [];
+  late List<String> droplist = [];
   var change;
   var s = 0;
   late String selected;
   var nameLabel;
+  //List<String> peoplelist;
 
 
   //String dropdownValue = '재원';
@@ -31,13 +33,14 @@ class _addNameState extends State<addName> {
   void initState() {
     super.initState();
     setState(() {
-      dropdownValue = widget.namelist[0];
+      print('리스트수 ${widget.peoplelist.length}');
+      dropdownValue = widget.peoplelist[0];
       print('dropdown 초기 값은 ${dropdownValue}');
-      for (int i=0; i<widget.namelist.length; i++) {
-        print('부모로부터 전송받은 namelist:  ${widget.namelist[i]}');
+      for (int i=0; i<widget.peoplelist.length; i++) {
+        print('부모로부터 전송받은 namelist:  ${widget.peoplelist[i]}');
       }
-      for (int i = 0; i < widget.namelist.length; i++) {
-        droplist.add(widget.namelist[i]);     // 전달받은 list값을 복사
+      for (int i = 0; i < widget.peoplelist.length; i++) {
+        droplist.add(widget.peoplelist[i]);     // 전달받은 list값을 복사
       }
     });
   }
@@ -73,7 +76,7 @@ class _addNameState extends State<addName> {
             child: DropdownButton(
                 isExpanded: true,
                 value: dropdownValue,
-                items: droplist.map((e) => DropdownMenuItem(
+                items: widget.peoplelist.map((e) => DropdownMenuItem<String>(
                   value: e,
                   child: Text(e),
                 )).toList(),
