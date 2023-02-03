@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dutch_pay_it/Screens/calculate.dart';
 import 'package:dutch_pay_it/Model/object.dart';
+import 'package:dutch_pay_it/Screens/addName.dart';
 
 class menuList extends StatefulWidget {
   const menuList({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class menuList extends StatefulWidget {
 class _menuListState extends State<menuList> {
   List<String> nameList = ['재원', '채민', '하늘','민혁'];
   List<String> nameLabel = ['지영'];     // 이름 라벨 리스트
-  var selectedName;
+  //var selectedName;
   var count = 0;
   var itemcount = 0;
 
@@ -34,6 +35,7 @@ class _menuListState extends State<menuList> {
   List<String> namelist = ['재원', '채민', '하늘','민혁'];
   String? dropdownValue;
   String? selected;
+  String? selectedName;
 
   printmenu() {
     for (int i = 0; i < 3; i++) {
@@ -45,6 +47,14 @@ class _menuListState extends State<menuList> {
   addCount() {
     setState(() {
       count++;
+    });
+  }
+
+
+  change() {
+    setState(() {
+      selectedName = selected;
+      //print('selected: ${selected}');
     });
   }
 
@@ -157,15 +167,21 @@ class _menuListState extends State<menuList> {
                                               height: 20.0,
                                               width:10,
                                               child: addnameLabel(),
+
                                           ),
                                         ),
+                                        // 구성원 추가 버튼
                                         Container(
+                                          decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
                                           margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                                           width: 20,
                                           height: 20,
                                            child: ElevatedButton(
                                                onPressed: () {
-                                                 addDialog();
+                                                 Navigator.push(
+                                                   context,
+                                                   MaterialPageRoute(builder: (context) => addName(namelist:namelist, change:change, selected:selected)),
+                                                 );
                                                },
                                                child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
                                                style: ElevatedButton.styleFrom(
@@ -210,7 +226,7 @@ class _menuListState extends State<menuList> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children:<Widget>[
-                Dropdown(namelist:namelist)
+                Dropdown(namelist:namelist, change:change, selected:selected)
                 //Text("안녕")
               ]
             ),
@@ -219,11 +235,18 @@ class _menuListState extends State<menuList> {
                 child: new ElevatedButton(
                   child: new Text("선택하기"),
                   onPressed: () {
-                    addCount();
-                    selectedName = selected;   // 드롭다운 메뉴에서 선택한 이름 저장
-                    print('selected Name : ${selectedName}');
-                    setState((){nameLabel.add(selectedName);});
-                    print('count: ${count}');
+
+                    setState(() {
+                      change();
+                      print('selected Name : ${selected}');;
+                    });
+                    // setState() {
+                    //   //count++;      // 선택하기 버튼 누르면 리스트의 구성원 수 +1
+                    //   //selectedName = selected;    // 드롭다운 메뉴에서 선택한 이름 저장
+                    //   print('selected Name : ${selected}');
+                    //   //nameLabel.add(selectedName);
+                    //   //print('count: ${count}');
+                    // }
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
@@ -347,9 +370,19 @@ class buttonBox extends StatelessWidget {
   }
 }
 
+enum MenuType {
+  first,
+  second,
+  third,
+}
+
+
+
 class Dropdown extends StatefulWidget {
-  Dropdown({Key? key, required this.namelist}) : super(key: key);
+  Dropdown({Key? key, required this.namelist, this.change, this.selected}) : super(key: key);
   List<String> namelist;
+  var change;
+  String? selected;
 
   @override
   State<Dropdown> createState() => _DropdownState();
@@ -359,6 +392,9 @@ class _DropdownState extends State<Dropdown> {
   //final namelist = ['재원', '채민', '하늘','민혁'];
   var dropdownValue;
   final droplist = [];
+  var change;
+  var s;
+  String? selected;
 
   @override
   void initState() {
@@ -375,6 +411,10 @@ class _DropdownState extends State<Dropdown> {
     });
   }
 
+  /*change(s) {
+    selected = s;
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
@@ -387,9 +427,14 @@ class _DropdownState extends State<Dropdown> {
         onChanged: (value) {
           setState(() {
             dropdownValue = value!;
-            print(dropdownValue);
+            //change(dropdownValue);   //-----여기서 오류 발생
+            selected = dropdownValue;      // onchange를 통해 바뀐 값을 addDialog에 전달해야함
+            print(selected);
+            //change(s);
           });
         }
     );
   }
 }
+
+// Dropdown 위젯 안에 addDialog 옮기던가 해야함
