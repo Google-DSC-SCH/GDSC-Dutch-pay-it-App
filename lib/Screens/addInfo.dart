@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dutch_pay_it/Screens/calculate.dart';
 import 'package:dutch_pay_it/Model/object.dart';
+import 'package:dutch_pay_it/Screens/addName.dart';
 
 class menuList extends StatefulWidget {
   const menuList({Key? key}) : super(key: key);
@@ -166,15 +167,21 @@ class _menuListState extends State<menuList> {
                                               height: 20.0,
                                               width:10,
                                               child: addnameLabel(),
+
                                           ),
                                         ),
+                                        // 구성원 추가 버튼
                                         Container(
+                                          decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
                                           margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                                           width: 20,
                                           height: 20,
                                            child: ElevatedButton(
                                                onPressed: () {
-                                                 addDialog();
+                                                 Navigator.push(
+                                                   context,
+                                                   MaterialPageRoute(builder: (context) => addName(namelist:namelist, change:change, selected:selected)),
+                                                 );
                                                },
                                                child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
                                                style: ElevatedButton.styleFrom(
@@ -362,6 +369,14 @@ class buttonBox extends StatelessWidget {
     );
   }
 }
+
+enum MenuType {
+  first,
+  second,
+  third,
+}
+
+
 
 class Dropdown extends StatefulWidget {
   Dropdown({Key? key, required this.namelist, this.change, this.selected}) : super(key: key);
