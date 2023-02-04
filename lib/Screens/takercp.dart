@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:dutch_pay_it/Model/object.dart';
 
 // 영수증 촬영 페이지
@@ -19,8 +21,8 @@ class TakeRcp extends StatefulWidget {
 class _TakeRcpState extends State<TakeRcp> {
 
   void initState() {
-    List<String> peopleName = widget.peoplelist;  // 구성원 리스트 from addlist
-    var peopleCount = widget.peoplelist.length;   // 총인원수 from addlist
+    // List<String> peopleName = widget.peoplelist;  // 구성원 리스트 from addlist
+    // var peopleCount = widget.peoplelist.length;   // 총인원수 from addlist
   }
 
 
@@ -90,6 +92,7 @@ class _TakeRcpState extends State<TakeRcp> {
           ),
           ElevatedButton(
               onPressed: () {
+                postRequest();
                 Get.to(MenuList());
               },
               child: Text(
@@ -103,5 +106,22 @@ class _TakeRcpState extends State<TakeRcp> {
         ],
       ),
     );
+  }
+  postRequest() async {
+    File imageFile = File(_image!.path);
+    List<int> imageBytes = imageFile.readAsBytesSync();
+    String base64Image = base64Encode(imageBytes);
+    print(base64Image);
+    Uri url = Uri.parse('');
+    http.Response response = await http.post(
+      url,
+      headers: <String, String> {
+        'Content-Type' : 'application/json; charset=UTF-8',
+      },
+      body: <String, String> {
+        'image' : '$base64Image'
+      }
+    );
+    print(response.body);
   }
 }

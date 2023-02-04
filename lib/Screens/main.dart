@@ -7,15 +7,15 @@ import 'package:dutch_pay_it/Screens/home.dart';
 import 'package:dutch_pay_it/Screens/takercp.dart';
 import 'package:get/get.dart';
 
-/*
+
  void main() {
    runApp(const MyApp());
  }
-*/
 
-void main() {
-  runApp(MaterialApp(home: Scaffold(body: MenuList())));
-}
+
+// void main() {
+//   runApp(MaterialApp(home: Scaffold(body: MenuList())));
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         splash: Icons.monetization_on,
         duration: 3000,
         splashTransition: SplashTransition.fadeTransition,
-        nextScreen: HomePage(title: '목록'),
+        nextScreen: HomePage(title: 'Dutch Pay It'),
       ),
     );
   }
