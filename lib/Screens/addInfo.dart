@@ -1,65 +1,53 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:dutch_pay_it/Screens/calculate.dart';
-import 'package:dutch_pay_it/Model/object.dart';
-import 'package:dutch_pay_it/Screens/addName.dart';
-import 'package:dutch_pay_it/Screens/addlist.dart';
 
-class menuList extends StatefulWidget {
-  menuList({Key? key, required this.peoplelist, required this.restaurant}) : super(key: key);
-  List<String> peoplelist;
-  String restaurant;
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-  @override
-  State<menuList> createState() => _menuListState();
+class Menu {
+  String shop;
+  String name;
+  int count;
+  int price;
+  String people;
+
+  Menu({required this.shop, required this.name, required this.count, required this.price, required this.people});
 }
 
-class _menuListState extends State<menuList> {
-  List<String> nameList = ['재원', '채민', '하늘','민혁'];
-  List<String>? nameLabel = [];     // 이름 라벨 리스트 (초기값 null)
-  var count = 0;
-  var itemcount = 0;
+Future<List<Menu>> fetchMenu() async {
+  final response = await http.get(Uri.parse('https://d07f5c54-2324-4048-8b65-02874f67c035.mock.pstmn.io/allmenulist'));
 
-  List<dynamic> menuInfo = [['소주', 6, 30000], ['안주', 1, 20000], ['맥주', 1, 5000]];
-  String shop = '식당이름';
+  if (response.statusCode == 200) {
+    final menus = json.decode(response.body);
 
-  List<MenuList> menulist = [
-    MenuList('식당1', '소주', 6, 30000, '지영', 1),
-    MenuList("식당1", "안주", 1, 20000, "현수", 1),
-    MenuList("식당1", "맥주", 1, 5000, "민혁", 1),
-  ];
-
-  TextEditingController _menuController = new TextEditingController(text: '픔목');
-  TextEditingController _priceController = new TextEditingController(text: '10000' + '원');
-  TextEditingController _countController = new TextEditingController(text: '1' + '개');
-
-  List<String> namelist = ['재원', '채민', '하늘','민혁'];
-  String? dropdownValue;
-  var selected;
-  var selectedName;
-
-  printmenu() {
-    for (int i = 0; i < 3; i++) {
-      print(menulist[i].menuName);
+    List<Menu> menuMap = [];
+    for(var user in menus) {
+      menuMap.add(Menu(
+        shop: user['shop'],
+        name: user['name'],
+        count: user['count'],
+        price: user['price'],
+        people: user['people'],
+      ));
     }
+    return menuMap;
   }
+  throw Exception('데이터 수신 실패!');
+}
 
-  addCount() {
-    setState(() {
-      count++;
-    });
-  }
+class MenuList extends StatefulWidget {
+  MenuList({Key? key}) : super(key: key);
 
-  change() {
-    setState(() {
-      selectedName = selected;
-    });
-  }
+  @override
+  State<MenuList> createState() => _MenuListState();
+}
+
+class _MenuListState extends State<MenuList> {
 
   @override
   Widget build(BuildContext context) {
-    itemcount = count;
     return Scaffold(
         appBar: AppBar(
           title:Text('정보 입력'),
@@ -67,141 +55,140 @@ class _menuListState extends State<menuList> {
           backgroundColor: Colors.blueGrey,
         ),
         body: Center(
-          //padding: EdgeInsets.all(20),
           child: Column(
             children: [
               SizedBox(height: 5),
               Flexible(
                 flex: 1,
-                child: Text("${widget.restaurant}",
+                child: Text("식당이름",
                   style: TextStyle(
                     fontSize: 17, fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               SizedBox(height: 5),
-              Flexible(
-                flex: 12,
-                child: ListView.builder(
-                  //itemCount: widget.menuInfo.length,
-                    itemCount: 3,
-                    itemBuilder: (BuildContext ctx, i) {
-                      return Card(
-                          elevation: 4.0,
-                          color: Color(0xffFFFFFF),
-                          margin: EdgeInsets.fromLTRB(20, 8, 20, 8),
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(3, 5, 3, 5),
-                            child: Column(
-                              children: [
-                                Container(
-                                    padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                                    child: Row(
+              FutureBuilder(
+                future: fetchMenu(),                           // User 배열 반환
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<Menu>? MenuArray = snapshot.data;   // 정확한 형식으로 변환
+                    return Flexible(
+                        flex: 12,
+                        child: ListView.builder(
+                            itemCount: MenuArray?.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                  elevation: 4.0,
+                                  color: Color(0xffFFFFFF),
+                                  margin: EdgeInsets.fromLTRB(20, 8, 20, 8),
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(3, 5, 3, 5),
+                                    child: Column(
                                       children: [
                                         Container(
-                                            width: 40,
-                                            child: Center(child: Text('품목'))),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            height: 20,
-                                            width: 100,
-                                            child: Flexible(
-                                              child: TextField(textAlign: TextAlign.center,
-                                                controller: new TextEditingController(text: '${menulist[i].menuName}'),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                            width: 40,
-                                            child: Center(child: Text('수량'))),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            height: 20,
-                                            width: 100,
-                                            child: Flexible(
-                                              child: TextField(textAlign: TextAlign.center,
-                                                controller: new TextEditingController(text: '${menulist[i].menuCount}'),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                ),
-                                Container(
-                                    padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                                    child: Row(
-                                        children: [
-                                          Container(
-                                              width: 40,
-                                              child: Center(child: Text('가격'))),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              height: 20,
-                                              width: 100,
-                                              child: Flexible(
-                                                child: TextField(textAlign: TextAlign.center,
-                                                  controller: new TextEditingController(text: '${menulist[i].price}'),
+                                            padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                    width: 40,
+                                                    child: Center(child: Text('품목'))),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 100,
+                                                    child: Flexible(
+                                                        child: Text(MenuArray![index].name)),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        ]
-                                    )
-                                ),
-                                Container(
-                                    padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            width: 40,
-                                            child: Center(child: Text('이름'))),
-                                        Expanded(flex: 6,
-                                          child: Container(
-                                              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                              height: 20.0,
-                                              width:10,
-                                              child: addnameLabel(),
-
-                                          ),
+                                                Container(
+                                                    width: 40,
+                                                    child: Center(child: Text('수량'))),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 100,
+                                                    child: Flexible(
+                                                        child: Text(MenuArray![index].count.toString())),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
                                         ),
-                                        // 구성원 추가 버튼
                                         Container(
-                                          //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-                                          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                          width: 20,
-                                          height: 20,
-                                           child: ElevatedButton(
-                                               onPressed: () {
-                                                 Navigator.push(
-                                                   context,
-                                                   MaterialPageRoute(builder: (context) => addName(peoplelist:widget.peoplelist, count:count, nameLabel:nameLabel, namelist:namelist, change:change, selected:selected, addCount:addCount)),
-                                                 );
-                                               },
-                                               child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
-                                               style: ElevatedButton.styleFrom(
-                                                 primary: Color(0xffEEEEEE),
-                                                 padding: EdgeInsets.zero,
-                                                 shadowColor: Colors.grey,// 버튼 여백 제거
-                                               )
-                                           ),
-                                         ),
+                                            padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                                            child: Row(
+                                                children: [
+                                                  Container(
+                                                      width: 40,
+                                                      child: Center(child: Text('가격'))),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Container(
+                                                      height: 20,
+                                                      width: 100,
+                                                      child: Flexible(
+                                                          child: Text(MenuArray![index].price.toString())),
+                                                    ),
+                                                  ),
+                                                ]
+                                            )
+                                        ),
+                                        Container(
+                                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                    width: 40,
+                                                    child: const Center(child: Text('이름'))),
+                                                Expanded(flex: 6,
+                                                  child: Container(
+                                                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                                      height: 20.0,
+                                                      width:10,
+                                                      child: Text(MenuArray![index].people) //: addnameLabel(),
+                                                  ),
+                                                ),
+                                                // 구성원 추가 버튼
+                                                Container(
+                                                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: ElevatedButton(
+                                                      onPressed: () {
+                                                        /*Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => addName(peoplelist:widget.peoplelist, count:count, nameLabel:nameLabel, namelist:namelist, selected:selected, addCount:addCount)),
+                                                );*/
+                                                      },
+                                                      child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
+                                                      style: ElevatedButton.styleFrom(
+                                                        primary: Color(0xffEEEEEE),
+                                                        padding: EdgeInsets.zero,
+                                                        shadowColor: Colors.grey,// 버튼 여백 제거
+                                                      )
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
                                       ],
-                                    )
-                                ),
-                              ],
-                            ),
-                          )
-                      );
-                    }
-                )
+                                    ),
+                                  )
+                              );
+                            }
+                        )
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  // 데이터를 로딩하는 동안 표시되는 인디케이터
+                  return CircularProgressIndicator();
+                },
               ),
               SizedBox(height: 20),
-              buttonBox(count:itemcount, nameLabel:nameLabel, menuInfo:menuInfo),
+              buttonBox(),
             ],
           ),
         )
@@ -211,14 +198,14 @@ class _menuListState extends State<menuList> {
  @override
  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
    super.debugFillProperties(properties);
-      properties.add(DiagnosticsProperty('dropdownValue', dropdownValue));
+      //properties.add(DiagnosticsProperty('dropdownValue', dropdownValue));
  }
 
-  // 메뉴별 구성원 이름을 출력 - 가로 Listview
+  // 수정해야함 (작업중)
   addnameLabel() {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: count,
+        itemCount: 3,
         itemBuilder: (c,i){
           return Container(
               margin: EdgeInsets.fromLTRB(0, 0, 2, 0),
@@ -230,7 +217,7 @@ class _menuListState extends State<menuList> {
               child:
               Center(
                   child: Text(
-                    '${nameLabel![i]}',
+                    '이름들어갈공간',
                     //'${count+1}',
                     style: TextStyle(color: Colors.white, fontSize: 11),
                   )
@@ -241,12 +228,8 @@ class _menuListState extends State<menuList> {
   }
 }
 
-// Dialog 하단 버튼창 위젯
 class buttonBox extends StatelessWidget {
-  buttonBox({Key? key, this.count, this.nameLabel, this.menuInfo}) : super(key: key);
-  var count;
-  var nameLabel;
-  var menuInfo;
+  buttonBox({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -271,10 +254,9 @@ class buttonBox extends StatelessWidget {
           ElevatedButton(
             child: Text("확인", ),
             onPressed: () {
-              print(count);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Calculate(count:count, nameLabel:nameLabel, menuInfo:menuInfo)),
+                MaterialPageRoute(builder: (context) => Calculate()),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -292,69 +274,3 @@ class buttonBox extends StatelessWidget {
 }
 
 
-
-
-/*
-class Dropdown extends StatefulWidget {
-  Dropdown({Key? key, required this.namelist, this.change, this.selected}) : super(key: key);
-  List<String> namelist;
-  var change;
-  String? selected;
-
-  @override
-  State<Dropdown> createState() => _DropdownState();
-}
-
-class _DropdownState extends State<Dropdown> {
-  //final namelist = ['재원', '채민', '하늘','민혁'];
-  var dropdownValue;
-  final droplist = [];
-  var change;
-  var s;
-  String? selected;
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      dropdownValue = widget.namelist[0];
-      print('dropdown 초기 값은 ${dropdownValue}');
-      for (int i=0; i<widget.namelist.length; i++) {
-        print('부모로부터 전송받은 namelist:  ${widget.namelist[i]}');
-      }
-      for (int i = 0; i < widget.namelist.length; i++) {
-        droplist.add(widget.namelist[i]);     // 전달받은 list값을 복사
-      }
-    });
-  }
-
-  */
-/*change(s) {
-    selected = s;
-  }*//*
-
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton(
-        isExpanded: true,
-        value: dropdownValue,
-        items: droplist.map((e) => DropdownMenuItem(
-          value: e,
-          child: Text(e),
-        )).toList(),
-        onChanged: (value) {
-          setState(() {
-            dropdownValue = value!;
-            //change(dropdownValue);   //-----여기서 오류 발생
-            selected = dropdownValue;      // onchange를 통해 바뀐 값을 addDialog에 전달해야함
-            print(selected);
-            //change(s);
-          });
-        }
-    );
-  }
-}
-
-// Dropdown 위젯 안에 addDialog 옮기던가 해야함
-*/
