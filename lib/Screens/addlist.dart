@@ -1,11 +1,13 @@
 
-
-import 'dart:convert';
+import 'package:dutch_pay_it/Screens/takercp.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:get/get.dart';
-
-import '../Model/object.dart';
-import 'addInfo.dart';
+import 'package:async/async.dart';
 
 class AddList extends StatefulWidget {
   const AddList({Key? key}) : super(key: key);
@@ -23,6 +25,28 @@ class _AddListState extends State<AddList> {
   List<TextField> _fields = [];
   List<String> peoplelist = [];
   String inputText = '';
+  String id = '';
+
+
+  // 디바이스 id 추출하기
+  Future<String> getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    late String deviceId;
+
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      deviceId = iosDeviceInfo.identifierForVendor!;
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      deviceId = androidDeviceInfo.androidId!;
+    } else {
+      deviceId = 'null';
+    }
+    print(deviceId);
+    id = deviceId;
+    return id;
+  }
+
 
   @override
   void initState() {
@@ -86,33 +110,33 @@ class _AddListState extends State<AddList> {
     );
   }
 
-  // Widget _okButton() {
-  //   return ElevatedButton(
-  //     onPressed: () async {
-  //       String text = _controllers
-  //           .where((element) => element.text != "")
-  //           .fold("", (acc, element) => acc += "${element.text}\n");
-  //       final alert = AlertDialog(
-  //         title: Text("Count: ${_controllers.length}"),
-  //         content: Text(text.trim()),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text("OK"),
-  //           ),
-  //         ],
-  //       );
-  //       await showDialog(
-  //         context: context,
-  //         builder: (BuildContext context) => alert,
-  //       );
-  //       setState(() {});
-  //     },
-  //     child: Text("OK"),
-  //   );
-  // }
+  Widget _okButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        String text = _controllers
+            .where((element) => element.text != "")
+            .fold("", (acc, element) => acc += "${element.text}\n");
+        final alert = AlertDialog(
+          title: Text("인원수: ${_controllers.length}명"),
+          content: Text(text.trim()),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) => alert,
+        );
+        setState(() {});
+      },
+      child: Text("OK"),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +160,7 @@ class _AddListState extends State<AddList> {
               ),
               TextField(
                 controller: _editingController,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   hintText: '식당 이름',
                   border: OutlineInputBorder(),
@@ -156,6 +181,7 @@ class _AddListState extends State<AddList> {
               ),
               _addTile(),
               _removeTile(),
+              _okButton(),
               SizedBox(
                 height: 1,
               ),
@@ -170,7 +196,9 @@ class _AddListState extends State<AddList> {
                       print('peoplelist.length개수 ${peoplelist.length}');
                     }
                   });
-                  Get.to(MenuList());     // 구성원 리스트 전달
+                  sendData();
+                  Get.to(TakeRcp());
+                  // Get.to(MenuList()); // 구성원 리스트 전달
                   //MaterialPageRoute(builder: (context) => menuList(peoplelist:peoplelist));
                 },
                 child: Text(
@@ -184,6 +212,25 @@ class _AddListState extends State<AddList> {
           ),
         ),
       ),
+    );
+  }
+  Future<void> sendData() async {
+    final url = Uri.parse('');
+
+    Map<String, String> headers = {
+      'Content-Type' : 'application/json'
+    };
+
+    final map = jsonEncode({
+      'name': id,
+      'shop': _editingController.text,
+      'nameList': peoplelist,
+    });
+
+    http.Response response = await http.post(
+        url,
+        headers: headers,
+        body: map
     );
   }
 }

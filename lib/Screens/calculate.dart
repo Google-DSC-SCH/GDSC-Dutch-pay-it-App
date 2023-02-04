@@ -59,7 +59,7 @@ class listBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: count+1,
+      itemCount: 6,
       itemBuilder: (context, i) {
         return Container(
           child: ListTile(
