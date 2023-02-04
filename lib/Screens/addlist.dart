@@ -1,7 +1,10 @@
+
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:dutch_pay_it/Screens/takercp.dart';
 import 'package:get/get.dart';
 
+import '../Model/object.dart';
 import 'addInfo.dart';
 
 class AddList extends StatefulWidget {
@@ -13,12 +16,18 @@ class AddList extends StatefulWidget {
 
 class _AddListState extends State<AddList> {
 
+
   String restaurant = '';
   TextEditingController _editingController = TextEditingController();
   List<TextEditingController> _controllers = [];
   List<TextField> _fields = [];
   List<String> peoplelist = [];
   String inputText = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -151,7 +160,7 @@ class _AddListState extends State<AddList> {
                 height: 1,
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async{
                   setState(() {
                     restaurant = _editingController.text;   // 입력받은 식당 이름을 문자열 형태로 변환하여 저장
                     print('_controllers.length값 ${_controllers.length}');
@@ -161,7 +170,7 @@ class _AddListState extends State<AddList> {
                       print('peoplelist.length개수 ${peoplelist.length}');
                     }
                   });
-                  Get.to(menuList(peoplelist:peoplelist, restaurant:restaurant));     // 구성원 리스트 전달
+                  Get.to(MenuList());     // 구성원 리스트 전달
                   //MaterialPageRoute(builder: (context) => menuList(peoplelist:peoplelist));
                 },
                 child: Text(
@@ -178,3 +187,5 @@ class _AddListState extends State<AddList> {
     );
   }
 }
+
+
