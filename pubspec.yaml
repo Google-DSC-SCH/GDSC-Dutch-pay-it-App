@@ -39,6 +39,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  http: 0.13.5
 
   animated_splash_screen:
   image_picker:

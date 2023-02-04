@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
-import 'package:dutch_pay_it/Screens/addlist.dart';
 import 'package:dutch_pay_it/Model/object.dart';
 
 // 영수증 촬영 페이지
@@ -91,7 +90,7 @@ class _TakeRcpState extends State<TakeRcp> {
           ),
           ElevatedButton(
               onPressed: () {
-                Get.to(menuList(peoplelist: [], restaurant: '',));
+                Get.to(MenuList());
               },
               child: Text(
                 '사진 저장',

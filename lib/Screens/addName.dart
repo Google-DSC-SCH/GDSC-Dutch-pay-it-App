@@ -1,3 +1,5 @@
+
+/*
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
@@ -109,3 +111,5 @@ class _addNameState extends State<addName> {
     );
   }
 }
+
+*/

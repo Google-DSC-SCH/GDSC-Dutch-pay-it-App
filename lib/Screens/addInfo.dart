@@ -11,7 +11,7 @@ class Menu {
   String name;
   int count;
   int price;
-  String people;
+  List<String> people;
 
   Menu({required this.shop, required this.name, required this.count, required this.price, required this.people});
 }
@@ -23,16 +23,21 @@ Future<List<Menu>> fetchMenu() async {
     final menus = json.decode(response.body);
 
     List<Menu> menuMap = [];
-    for(var user in menus) {
+    for(var menu in menus) {
       menuMap.add(Menu(
-        shop: user['shop'],
-        name: user['name'],
-        count: user['count'],
-        price: user['price'],
-        people: user['people'],
+        shop: menu['shop'],
+        name: menu['name'],
+        count: menu['count'],
+        price: menu['price'],
+        people: menu['people'],
       ));
     }
-    return menuMap;
+
+    // 이름 리스트 작업중
+    /*final peoples = json.decode(response.body.people)
+
+    List<String> peopleMap = [];
+    return menuMap;*/
   }
   throw Exception('데이터 수신 실패!');
 }
@@ -147,7 +152,7 @@ class _MenuListState extends State<MenuList> {
                                                       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                                                       height: 20.0,
                                                       width:10,
-                                                      child: Text(MenuArray![index].people) //: addnameLabel(),
+                                                      child: Text("이름라벨") //: addnameLabel(),
                                                   ),
                                                 ),
                                                 // 구성원 추가 버튼
