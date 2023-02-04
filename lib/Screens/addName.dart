@@ -4,12 +4,7 @@ import 'package:dutch_pay_it/Screens/addInfo.dart';
 
 class addName extends StatefulWidget {
   addName({Key? key, required this.peoplelist, this.count, required this.nameLabel, required this.namelist, this.change, required this.selected, this.addCount}) : super(key: key);
-  var namelist;
-  var nameLabel;
-  var change;
-  var count;
-  var selected;
-  var addCount;
+  var namelist, nameLabel, change, count, selected, addCount;
   List<String> peoplelist;
 
   @override
@@ -17,17 +12,10 @@ class addName extends StatefulWidget {
 }
 
 class _addNameState extends State<addName> {
-  //final namelist = ['재원', '채민', '하늘','민혁'];
   var dropdownValue;
   late List<String> droplist = [];
-  var change;
-  var s = 0;
   late String selected;
   var nameLabel;
-  //List<String> peoplelist;
-
-
-  //String dropdownValue = '재원';
 
   @override
   void initState() {
@@ -70,26 +58,26 @@ class _addNameState extends State<addName> {
               SizedBox(
                 height: 15,
               ),
-          Container(
-            margin: EdgeInsets.all(20),
-            width: 150,
-            child: DropdownButton(
-                isExpanded: true,
-                value: dropdownValue,
-                items: widget.peoplelist.map((e) => DropdownMenuItem<String>(
-                  value: e,
-                  child: Text(e),
-                )).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    dropdownValue = value!;
-                    //change(dropdownValue);   //-----여기서 오류 발생
-                    //selected = dropdownValue;      // onchange를 통해 바뀐 값을 addDialog에 전달해야함
-                    print(dropdownValue);
-                  });
-                }
-            ),
-          ),
+              Container(
+                margin: EdgeInsets.all(20),
+                width: 150,
+                child: DropdownButton(
+                    isExpanded: true,
+                    value: dropdownValue,
+                    items: widget.peoplelist.map((e) => DropdownMenuItem<String>(
+                      value: e,
+                      child: Text(e),
+                    )).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                        //change(dropdownValue);   //-----여기서 오류 발생
+                        //selected = dropdownValue;      // onchange를 통해 바뀐 값을 addDialog에 전달해야함
+                        print(dropdownValue);
+                      });
+                    }
+                ),
+              ),
               SizedBox(
                 height: 20,
               ),
