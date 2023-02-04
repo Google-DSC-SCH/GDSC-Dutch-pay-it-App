@@ -101,7 +101,7 @@ class _addNameState extends State<addName> {
                     //widget.count++;
                     selected = dropdownValue;
                     print("추가된 selected값은 ${selected}, count값은 ${widget.count}");
-                    widget.nameLabel.add(selected);
+                    widget.nameLabel.add(selected!);
                   });
                   //change(selected);
                   Navigator.pop(context);

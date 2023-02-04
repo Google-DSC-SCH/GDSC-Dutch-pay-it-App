@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:dutch_pay_it/Screens/takercp.dart';
 import 'package:get/get.dart';
 
+import 'addInfo.dart';
+
 class AddList extends StatefulWidget {
   const AddList({Key? key}) : super(key: key);
 
@@ -15,6 +17,8 @@ class _AddListState extends State<AddList> {
   TextEditingController _editingController = TextEditingController();
   List<TextEditingController> _controllers = [];
   List<TextField> _fields = [];
+  List<String> peoplelist = [];
+  String inputText = '';
 
   @override
   void dispose() {
@@ -28,17 +32,21 @@ class _AddListState extends State<AddList> {
     return ListTile(
       title: Icon(Icons.add),
       onTap: () {
-        final controller = TextEditingController();
+        var controller = TextEditingController();
         final field = TextField(
+          onChanged: (text) {
+            inputText = text;
+          },
           controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             hintText: "구성원 ${_controllers.length + 1}",
           ),
         );
-
         setState(() {
           _controllers.add(controller);
+          //peoplelist.add(_controllers);
+          print(_controllers.length);
           _fields.add(field);
         });
       },
@@ -50,7 +58,7 @@ class _AddListState extends State<AddList> {
       title: Icon(Icons.remove),
       onTap: () {
         setState(() {
-          _controllers.removeLast();
+          peoplelist.removeLast();
           _fields.removeLast();
         });
       },
@@ -134,7 +142,9 @@ class _AddListState extends State<AddList> {
               SizedBox(
                 height: 20,
               ),
-              Expanded(child: _listView()),
+              Expanded(
+                  child: _listView()
+              ),
               _addTile(),
               _removeTile(),
               SizedBox(
@@ -142,7 +152,17 @@ class _AddListState extends State<AddList> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(TakeRcp(peoplelist:_controllers));     // 구성원 리스트 전달
+                  setState(() {
+                    restaurant = _editingController.text;   // 입력받은 식당 이름을 문자열 형태로 변환하여 저장
+                    print('_controllers.length값 ${_controllers.length}');
+                    for (int i = 0; i < _controllers.length; i++) {
+                      print('_controller 리스트 값 ${_controllers[i].text}');
+                      peoplelist.add(_controllers[i].text);
+                      print('peoplelist.length개수 ${peoplelist.length}');
+                    }
+                  });
+                  Get.to(menuList(peoplelist:peoplelist, restaurant:restaurant));     // 구성원 리스트 전달
+                  //MaterialPageRoute(builder: (context) => menuList(peoplelist:peoplelist));
                 },
                 child: Text(
                   '영수증 촬영하기',
