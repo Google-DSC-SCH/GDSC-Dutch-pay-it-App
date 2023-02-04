@@ -7,8 +7,9 @@ import 'package:dutch_pay_it/Screens/addName.dart';
 import 'package:dutch_pay_it/Screens/addlist.dart';
 
 class menuList extends StatefulWidget {
-  menuList({Key? key, required this.peoplelist}) : super(key: key);
+  menuList({Key? key, required this.peoplelist, required this.restaurant}) : super(key: key);
   List<String> peoplelist;
+  String restaurant;
 
   @override
   State<menuList> createState() => _menuListState();
@@ -16,12 +17,9 @@ class menuList extends StatefulWidget {
 
 class _menuListState extends State<menuList> {
   List<String> nameList = ['재원', '채민', '하늘','민혁'];
-  List<String> nameLabel = ['지영'];     // 이름 라벨 리스트
-  //var selectedName;
+  List<String>? nameLabel = [];     // 이름 라벨 리스트 (초기값 null)
   var count = 0;
   var itemcount = 0;
-  //late List<dynamic> peoplelist;
-  //final peoplelist;
 
   List<dynamic> menuInfo = [['소주', 6, 30000], ['안주', 1, 20000], ['맥주', 1, 5000]];
   String shop = '식당이름';
@@ -56,7 +54,6 @@ class _menuListState extends State<menuList> {
   change() {
     setState(() {
       selectedName = selected;
-      //print('selected: ${selected}');
     });
   }
 
@@ -76,7 +73,7 @@ class _menuListState extends State<menuList> {
               SizedBox(height: 5),
               Flexible(
                 flex: 1,
-                child: Text("${shop}",
+                child: Text("${widget.restaurant}",
                   style: TextStyle(
                     fontSize: 17, fontWeight: FontWeight.bold,
                   ),
@@ -221,7 +218,7 @@ class _menuListState extends State<menuList> {
   addnameLabel() {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: count+1,
+        itemCount: count,
         itemBuilder: (c,i){
           return Container(
               margin: EdgeInsets.fromLTRB(0, 0, 2, 0),
@@ -233,7 +230,7 @@ class _menuListState extends State<menuList> {
               child:
               Center(
                   child: Text(
-                    '${nameLabel[i]}',
+                    '${nameLabel![i]}',
                     //'${count+1}',
                     style: TextStyle(color: Colors.white, fontSize: 11),
                   )
@@ -243,33 +240,6 @@ class _menuListState extends State<menuList> {
     );
   }
 }
-
-/*class addnameLabel extends StatelessWidget {
-  addnameLabel({Key? key, this.count, this.nameLabel}) : super(key: key);
-  var count;
-  var nameLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: count+1,
-        itemBuilder: (c,i){
-          return Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 2, 0),
-              width: 35,
-              decoration: BoxDecoration(
-                color: Color(0xff37b067),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child:
-              Center(
-                  child: Text('${nameLabel[i]}', style: TextStyle(color: Colors.white, fontSize: 11),))
-          );
-        }
-    );
-  }
-}*/
 
 // Dialog 하단 버튼창 위젯
 class buttonBox extends StatelessWidget {

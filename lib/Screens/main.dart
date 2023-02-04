@@ -7,13 +7,13 @@ import 'package:dutch_pay_it/Screens/home.dart';
 import 'package:dutch_pay_it/Screens/takercp.dart';
 import 'package:get/get.dart';
 
-// void main() {
-//   runApp(const MyApp());
-// }
+ void main() {
+   runApp(const MyApp());
+ }
 
-void main() {
-  runApp(MaterialApp(home: Scaffold(body: menuList())));
-}
+//void main() {
+//  runApp(MaterialApp(home: Scaffold(body: menuList())));
+//}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/1', page: () => HomePage(title: '')),
         GetPage(name: '/2', page: () => AddList()),
         GetPage(name: '/3', page: () => TakeRcp()),
-        GetPage(name: '/4', page: () => menuList()),
+        GetPage(name: '/4', page: () => menuList(peoplelist: [], restaurant: '',)),
         GetPage(name: '/5', page: () => Calculate()),
       ],
       debugShowCheckedModeBanner: false,

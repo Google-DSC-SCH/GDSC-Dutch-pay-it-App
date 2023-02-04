@@ -91,7 +91,7 @@ class _TakeRcpState extends State<TakeRcp> {
           ),
           ElevatedButton(
               onPressed: () {
-                Get.to(menuList(peoplelist: [],));
+                Get.to(menuList(peoplelist: [], restaurant: '',));
               },
               child: Text(
                 '사진 저장',
