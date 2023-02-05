@@ -1,13 +1,15 @@
-
-/*
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
 
 class addName extends StatefulWidget {
-  addName({Key? key, required this.peoplelist, this.count, required this.nameLabel, required this.namelist, this.change, required this.selected, this.addCount}) : super(key: key);
-  var namelist, nameLabel, change, count, selected, addCount;
+
+  addName({Key? key, required this.peoplelist, required this.peopleLabel, this.addnameLabel, this.addCount, this.addPeople}) : super(key: key);
   List<String> peoplelist;
+  List<String>? peopleLabel;
+  var addnameLabel;
+  var addCount;
+  var addPeople;
 
   @override
   State<addName> createState() => _addNameState();
@@ -18,11 +20,14 @@ class _addNameState extends State<addName> {
   late List<String> droplist = [];
   late String selected;
   var nameLabel;
+  //List<String>? peopleLabel;
 
   @override
   void initState() {
     super.initState();
     setState(() {
+      print("전달받은 peopleLabel");
+      print(widget.peopleLabel);
       print('리스트수 ${widget.peoplelist.length}');
       dropdownValue = widget.peoplelist[0];
       print('dropdown 초기 값은 ${dropdownValue}');
@@ -66,7 +71,7 @@ class _addNameState extends State<addName> {
                 child: DropdownButton(
                     isExpanded: true,
                     value: dropdownValue,
-                    items: widget.peoplelist.map((e) => DropdownMenuItem<String>(
+                    items: widget.peoplelist.map((e) => DropdownMenuItem(
                       value: e,
                       child: Text(e),
                     )).toList(),
@@ -87,14 +92,19 @@ class _addNameState extends State<addName> {
                 child: Text("선택완료"),
                 onPressed: () {
                   setState(() {
-                    widget.addCount();
+                    //widget.peopleLabel!.length++;
+                    //widget.addCount();
                     //widget.count++;
                     selected = dropdownValue;
-                    print("추가된 selected값은 ${selected}, count값은 ${widget.count}");
-                    widget.nameLabel.add(selected!);
+                    print("추가된 selected값은 ${selected}");
+                    //widget.peopleLabel?.add(selected);
+                    widget.addPeople(selected);
+                    //widget.addnameLabel(widget.peopleLabel);
+                    print(widget.peopleLabel!);       // 오류 x
                   });
                   //change(selected);
                   Navigator.pop(context);
+                  //Navigator.push(context, MaterialPageRoute(builder: (context) => MenuList(peoplelist: widget.peoplelist,)));
                 },
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(90, 35),
@@ -111,5 +121,3 @@ class _addNameState extends State<addName> {
     );
   }
 }
-
-*/

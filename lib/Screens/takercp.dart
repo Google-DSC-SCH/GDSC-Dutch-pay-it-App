@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:dutch_pay_it/Model/object.dart';
 
 // 영수증 촬영 페이지
 
 class TakeRcp extends StatefulWidget {
-  TakeRcp({Key? key, this.peoplelist}) : super(key: key);
-  var peoplelist;   // addlist에서 입력받은 구성원 리스트 (_controller)
+  TakeRcp({Key? key, required this.peoplelist}) : super(key: key);
+  List<String> peoplelist;   // addlist에서 입력받은 구성원 리스트 (_controller)
 
   @override
   State<TakeRcp> createState() => _TakeRcpState();
@@ -19,8 +21,8 @@ class TakeRcp extends StatefulWidget {
 class _TakeRcpState extends State<TakeRcp> {
 
   void initState() {
-    List<String> peopleName = widget.peoplelist;  // 구성원 리스트 from addlist
-    var peopleCount = widget.peoplelist.length;   // 총인원수 from addlist
+    // List<String> peopleName = widget.peoplelist;  // 구성원 리스트 from addlist
+    // var peopleCount = widget.peoplelist.length;   // 총인원수 from addlist
   }
 
 
@@ -89,19 +91,37 @@ class _TakeRcpState extends State<TakeRcp> {
             height: 30,
           ),
           ElevatedButton(
-              onPressed: () {
-                Get.to(MenuList());
-              },
-              child: Text(
-                '사진 저장',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+            onPressed: () {
+              postRequest();
+              Get.to(MenuList(peoplelist:widget.peoplelist));
+            },
+            child: Text(
+              '사진 저장',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue
+                backgroundColor: Colors.blue
             ),
           )
         ],
       ),
     );
+  }
+  postRequest() async {
+    File imageFile = File(_image!.path);
+    List<int> imageBytes = imageFile.readAsBytesSync();
+    String base64Image = base64Encode(imageBytes);
+    print(base64Image);
+    Uri url = Uri.parse('');
+    http.Response response = await http.post(
+        url,
+        headers: <String, String> {
+          'Content-Type' : 'application/json; charset=UTF-8',
+        },
+        body: <String, String> {
+          'image' : '$base64Image'
+        }
+    );
+    print(response.body);
   }
 }
