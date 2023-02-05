@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dutch_pay_it/Screens/calculate.dart';
+import 'package:dutch_pay_it/Screens/addName.dart';
 
 import 'dart:async';
 import 'dart:convert';
@@ -11,9 +12,9 @@ class Menu {
   String name;
   int count;
   int price;
-  List<String> people;
+  List<String>? people = [];
 
-  Menu({required this.shop, required this.name, required this.count, required this.price, required this.people});
+  Menu({required this.shop, required this.name, required this.count, required this.price});
 }
 
 Future<List<Menu>> fetchMenu() async {
@@ -23,33 +24,45 @@ Future<List<Menu>> fetchMenu() async {
     final menus = json.decode(response.body);
 
     List<Menu> menuMap = [];
-    for(var menu in menus) {
+    for(var user in menus) {
       menuMap.add(Menu(
-        shop: menu['shop'],
-        name: menu['name'],
-        count: menu['count'],
-        price: menu['price'],
-        people: menu['people'],
+        shop: user['shop'],
+        name: user['name'],
+        count: user['count'],
+        price: user['price'],
       ));
     }
-
-    // 이름 리스트 작업중
-    /*final peoples = json.decode(response.body.people)
-
-    List<String> peopleMap = [];
-    return menuMap;*/
+    return menuMap;
   }
   throw Exception('데이터 수신 실패!');
 }
 
 class MenuList extends StatefulWidget {
-  MenuList({Key? key}) : super(key: key);
+  MenuList({Key? key, required this.peoplelist}) : super(key: key);
+  List<String> peoplelist;
 
   @override
   State<MenuList> createState() => _MenuListState();
 }
 
 class _MenuListState extends State<MenuList> {
+  var count = 0;
+  late Future<List<Menu>> Menuapi;
+
+  addCount() {
+    setState(() {
+      count++;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("4번 페이지 initState");
+    Menuapi = fetchMenu() as Future<List<Menu>>;
+    print("fetchmenu 호출");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +76,7 @@ class _MenuListState extends State<MenuList> {
           child: Column(
             children: [
               SizedBox(height: 5),
-              Flexible(
+              const Flexible(
                 flex: 1,
                 child: Text("식당이름",
                   style: TextStyle(
@@ -72,62 +85,65 @@ class _MenuListState extends State<MenuList> {
                 ),
               ),
               SizedBox(height: 5),
-              FutureBuilder(
-                future: fetchMenu(),                           // User 배열 반환
+              FutureBuilder(// Menu 배열 반환
+                future: Menuapi,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<Menu>? MenuArray = snapshot.data;   // 정확한 형식으로 변환
+                    List<Menu>? MenuArray = snapshot.data as List<Menu>?;   // 정확한 형식으로 변환
+                    print("fetchmenu 호출");
                     return Flexible(
                         flex: 12,
                         child: ListView.builder(
                             itemCount: MenuArray?.length,
                             itemBuilder: (context, index) {
+                              List<String>? peopleLabel = MenuArray![index].people;
+                              addPeople(a) { setState(() { peopleLabel?.add(a); }); }
                               return Card(
                                   elevation: 4.0,
                                   color: Color(0xffFFFFFF),
-                                  margin: EdgeInsets.fromLTRB(20, 8, 20, 8),
+                                  margin: const EdgeInsets.fromLTRB(20, 8, 20, 8),
                                   child: Container(
-                                    margin: EdgeInsets.fromLTRB(3, 5, 3, 5),
+                                    margin: const EdgeInsets.fromLTRB(3, 5, 3, 5),
                                     child: Column(
                                       children: [
                                         Container(
-                                            padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                                             child: Row(
                                               children: [
                                                 Container(
                                                     width: 40,
-                                                    child: Center(child: Text('품목'))),
+                                                    child: const Center(child: Text('품목'))),
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Container(
                                                     height: 20,
                                                     width: 100,
                                                     child: Flexible(
-                                                        child: Text(MenuArray![index].name)),
+                                                        child: Text(MenuArray[index].name)),
                                                   ),
                                                 ),
                                                 Container(
                                                     width: 40,
-                                                    child: Center(child: Text('수량'))),
+                                                    child: const Center(child: Text('수량'))),
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Container(
                                                     height: 20,
                                                     width: 100,
                                                     child: Flexible(
-                                                        child: Text(MenuArray![index].count.toString())),
+                                                        child: Text(MenuArray[index].count.toString())),
                                                   ),
                                                 ),
                                               ],
                                             )
                                         ),
                                         Container(
-                                            padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                                             child: Row(
                                                 children: [
                                                   Container(
                                                       width: 40,
-                                                      child: Center(child: Text('가격'))),
+                                                      child: const Center(child: Text('가격'))),
                                                   Padding(
                                                     padding: const EdgeInsets.all(8.0),
                                                     child: Container(
@@ -152,7 +168,7 @@ class _MenuListState extends State<MenuList> {
                                                       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                                                       height: 20.0,
                                                       width:10,
-                                                      child: Text("이름라벨") //: addnameLabel(),
+                                                      child: addnameLabel(peopleLabel, index),
                                                   ),
                                                 ),
                                                 // 구성원 추가 버튼
@@ -162,10 +178,8 @@ class _MenuListState extends State<MenuList> {
                                                   height: 20,
                                                   child: ElevatedButton(
                                                       onPressed: () {
-                                                        /*Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(builder: (context) => addName(peoplelist:widget.peoplelist, count:count, nameLabel:nameLabel, namelist:namelist, selected:selected, addCount:addCount)),
-                                                );*/
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => addName(peoplelist:widget.peoplelist, peopleLabel:peopleLabel, addnameLabel:addnameLabel, addCount:addCount, addPeople:addPeople)));
+                                                        print(index);
                                                       },
                                                       child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
                                                       style: ElevatedButton.styleFrom(
@@ -189,10 +203,10 @@ class _MenuListState extends State<MenuList> {
                     return Text('${snapshot.error}');
                   }
                   // 데이터를 로딩하는 동안 표시되는 인디케이터
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buttonBox(),
             ],
           ),
@@ -200,20 +214,21 @@ class _MenuListState extends State<MenuList> {
     );
   }
 
- @override
- void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-   super.debugFillProperties(properties);
-      //properties.add(DiagnosticsProperty('dropdownValue', dropdownValue));
- }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    //properties.add(DiagnosticsProperty('dropdownValue', dropdownValue));
+  }
 
   // 수정해야함 (작업중)
-  addnameLabel() {
+  addnameLabel(List<String>? peopleLabel, int index) {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount: peopleLabel!.length,
         itemBuilder: (c,i){
+          print(peopleLabel[i]);
           return Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 2, 0),
+              margin: const EdgeInsets.fromLTRB(0, 0, 2, 0),
               width: 35,
               decoration: BoxDecoration(
                 color: Color(0xff37b067),
@@ -222,9 +237,9 @@ class _MenuListState extends State<MenuList> {
               child:
               Center(
                   child: Text(
-                    '이름들어갈공간',
+                    '${peopleLabel[i]}',
                     //'${count+1}',
-                    style: TextStyle(color: Colors.white, fontSize: 11),
+                    style: const TextStyle(color: Colors.white, fontSize: 11),
                   )
               )
           );
@@ -257,7 +272,7 @@ class buttonBox extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            child: Text("확인", ),
+            child: Text("확인"),
             onPressed: () {
               Navigator.push(
                 context,
@@ -265,11 +280,11 @@ class buttonBox extends StatelessWidget {
               );
             },
             style: ElevatedButton.styleFrom(
-              fixedSize: const Size(90, 35),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              primary: Colors.blueGrey
+                fixedSize: const Size(90, 35),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                primary: Colors.blueGrey
             ),
           ),
         ],
@@ -277,5 +292,3 @@ class buttonBox extends StatelessWidget {
     );
   }
 }
-
-
