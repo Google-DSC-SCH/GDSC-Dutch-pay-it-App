@@ -47,6 +47,7 @@ class MenuList extends StatefulWidget {
 
 class _MenuListState extends State<MenuList> {
   var count = 0;
+  late Future<List<Menu>> Menuapi;
 
   addCount() {
     setState(() {
@@ -59,6 +60,8 @@ class _MenuListState extends State<MenuList> {
     // TODO: implement initState
     super.initState();
     print("4번 페이지 initState");
+    Menuapi = fetchMenu() as Future<List<Menu>>;
+    print("fetchmenu 호출");
   }
 
   @override
@@ -83,10 +86,10 @@ class _MenuListState extends State<MenuList> {
               ),
               SizedBox(height: 5),
               FutureBuilder(// Menu 배열 반환
-                future: fetchMenu(),
+                future: Menuapi,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<Menu>? MenuArray = snapshot.data;   // 정확한 형식으로 변환
+                    List<Menu>? MenuArray = snapshot.data as List<Menu>?;   // 정확한 형식으로 변환
                     print("fetchmenu 호출");
                     return Flexible(
                         flex: 12,
