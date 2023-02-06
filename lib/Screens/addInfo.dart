@@ -38,8 +38,9 @@ Future<List<Menu>> fetchMenu() async {
 }
 
 class MenuList extends StatefulWidget {
-  MenuList({Key? key, required this.peoplelist}) : super(key: key);
+  MenuList({Key? key, required this.peoplelist, this.shopname}) : super(key: key);
   List<String> peoplelist;
+  var shopname;
 
   @override
   State<MenuList> createState() => _MenuListState();
@@ -76,9 +77,9 @@ class _MenuListState extends State<MenuList> {
           child: Column(
             children: [
               SizedBox(height: 5),
-              const Flexible(
+              Flexible(
                 flex: 1,
-                child: Text("식당이름",
+                child: Text("${widget.shopname}",
                   style: TextStyle(
                     fontSize: 17, fontWeight: FontWeight.bold,
                   ),
@@ -165,10 +166,10 @@ class _MenuListState extends State<MenuList> {
                                                     child: const Center(child: Text('이름'))),
                                                 Expanded(flex: 6,
                                                   child: Container(
-                                                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                                      height: 20.0,
-                                                      width:10,
-                                                      child: addnameLabel(peopleLabel, index),
+                                                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                                    height: 20.0,
+                                                    width:10,
+                                                    child: addnameLabel(peopleLabel, index),
                                                   ),
                                                 ),
                                                 // 구성원 추가 버튼

@@ -11,7 +11,10 @@ import 'package:dutch_pay_it/Model/object.dart';
 // 영수증 촬영 페이지
 
 class TakeRcp extends StatefulWidget {
-  TakeRcp({Key? key, required this.peoplelist}) : super(key: key);
+  var key_name;
+  var shop;
+
+  TakeRcp({Key? key, required this.peoplelist, this.key_name, required this.shop}) : super(key: key);
   List<String> peoplelist;   // addlist에서 입력받은 구성원 리스트 (_controller)
 
   @override
@@ -20,11 +23,11 @@ class TakeRcp extends StatefulWidget {
 
 class _TakeRcpState extends State<TakeRcp> {
 
+  @override
   void initState() {
     // List<String> peopleName = widget.peoplelist;  // 구성원 리스트 from addlist
     // var peopleCount = widget.peoplelist.length;   // 총인원수 from addlist
   }
-
 
   File? _image;
   final picker = ImagePicker();
@@ -44,7 +47,7 @@ class _TakeRcpState extends State<TakeRcp> {
         height: MediaQuery.of(context).size.width,
         child: Center(
             child: _image == null
-                ? Text('No image selected.')
+                ? const Text('No image selected.')
                 : Image.file(File(_image!.path))));
   }
 
@@ -56,16 +59,16 @@ class _TakeRcpState extends State<TakeRcp> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('영수증 촬영'),
+        title: const Text('영수증 촬영'),
         centerTitle: true,
       ),
       backgroundColor: const Color(0xfff4f3f9),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 25.0),
+          const SizedBox(height: 25.0),
           showImage(),
-          SizedBox(
+          const SizedBox(
             height: 50.0,
           ),
           Row(
@@ -87,41 +90,51 @@ class _TakeRcpState extends State<TakeRcp> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           ElevatedButton(
             onPressed: () {
               postRequest();
-              Get.to(MenuList(peoplelist:widget.peoplelist));
+              Get.to(MenuList(peoplelist:widget.peoplelist, shopname:widget.shop));
             },
-            child: Text(
-              '사진 저장',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue
+            ),
+            child: const Text(
+              '사진 저장',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           )
         ],
       ),
     );
   }
-  postRequest() async {
+
+  // 이미지 전송 POST 오류
+  Future<void> postRequest() async {
     File imageFile = File(_image!.path);
-    List<int> imageBytes = imageFile.readAsBytesSync();
-    String base64Image = base64Encode(imageBytes);
-    print(base64Image);
-    Uri url = Uri.parse('');
+    //List<int> imageBytes = imageFile.readAsBytesSync();
+    //String base64Image = base64Encode(imageBytes);
+    //print(base64Image);
+    print("이미지파일은 ${imageFile}");
+    Uri url = Uri.parse('http://cjw7155.iptime.org:8080/menu/send/image');
+
+    var headers = {
+      'Content-Type' : 'application/json'
+    };
+
+    final body = {
+      'request': {'key_name': 1, 'shop': '지짐이'},
+      'image' : 'assets/images/image.jpg'
+    };
+
     http.Response response = await http.post(
         url,
-        headers: <String, String> {
-          'Content-Type' : 'application/json; charset=UTF-8',
-        },
-        body: <String, String> {
-          'image' : '$base64Image'
-        }
+        headers: headers,
+        body: json.encode(body)
     );
     print(response.body);
   }
+
 }

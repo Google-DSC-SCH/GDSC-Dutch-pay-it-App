@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:async/async.dart';
-
 import 'addInfo.dart';
 
 class AddList extends StatefulWidget {
@@ -18,8 +17,6 @@ class AddList extends StatefulWidget {
 }
 
 class _AddListState extends State<AddList> {
-
-
   String restaurant = '';
   TextEditingController _editingController = TextEditingController();
   List<TextEditingController> _controllers = [];
@@ -198,8 +195,8 @@ class _AddListState extends State<AddList> {
                     }
                   });
                   sendData();         // 유저키값, 식당이름, 구성원 리스트 서버로 POST
-                  //Get.to(TakeRcp(peoplelist:peoplelist));
-                  Get.to(MenuList(peoplelist:peoplelist)); // 구성원 리스트 전달
+                  Get.to(TakeRcp(peoplelist:peoplelist, key_name:id, shop:_editingController.text));
+                  //Get.to(MenuList(peoplelist:peoplelist)); // 구성원 리스트 전달
                   //MaterialPageRoute(builder: (context) => menuList(peoplelist:peoplelist));
                 },
                 child: Text(
@@ -216,7 +213,7 @@ class _AddListState extends State<AddList> {
     );
   }
   Future<void> sendData() async {
-    final url = Uri.parse('');
+    final url = Uri.parse('http://15.164.45.247:8080/user/create');
 
     Map<String, String> headers = {
       'Content-Type' : 'application/json'

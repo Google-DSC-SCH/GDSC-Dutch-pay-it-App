@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/1', page: () => HomePage(title: '')),
         GetPage(name: '/2', page: () => AddList()),
-        GetPage(name: '/3', page: () => TakeRcp(peoplelist: [],)),
+        GetPage(name: '/3', page: () => TakeRcp(peoplelist: [], shop: '',)),
         GetPage(name: '/4', page: () => MenuList(peoplelist: [])),
         GetPage(name: '/5', page: () => Calculate()),
       ],
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         splash: Icons.monetization_on,
         duration: 3000,
         splashTransition: SplashTransition.fadeTransition,
-        nextScreen: HomePage(title: '목록'),
+        nextScreen: const HomePage(title: '목록'),
       ),
     );
   }
