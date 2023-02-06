@@ -3,10 +3,55 @@ import 'package:get/get.dart';
 import 'package:dutch_pay_it/Screens/home.dart';
 
 class Calculate extends StatelessWidget {
-  Calculate({Key? key, this.menuInfo, this.count, this.nameLabel, this.menuItem}) : super(key: key);
-  var count;
-  var nameLabel;
-  var menuItem;
+  Calculate({Key? key}) : super(key: key);
+  var nameLabel = ['지영', '현수', '윤섭', '재원'];
+  var count = 0;
+  var menuItem = [
+    {
+      "name": "지영",
+      "menu": [
+        {"name": "닭발", "price":4000},
+        {"name": "참이슬", "price":4500},
+        {"name": "계란말이", "price":7750}
+      ],
+      "sum" : 16250
+    },
+    {
+      "name": "민혁",
+      "menu": [
+        {"name": "카스", "price":4500},
+        {"name": "오돌뼈&주먹밥", "price":8000},
+        {"name": "계란말이", "price":7750}
+      ],
+      "sum" : 15750
+    },
+    {
+      "name": "윤섭",
+      "menu": [
+        {"name": "카스", "price":4500},
+        {"name": "오돌뼈&주먹밥", "price":8000},
+        {"name": "닭발", "price":4000}
+      ],
+      "sum" : 16500
+    },
+    {
+      "name": "하늘",
+      "menu": [
+        {"name": "참이슬", "price":4500},
+        {"name": "오돌뼈&주먹밥", "price":8000},
+        {"name": "카스", "price":4500}
+      ],
+      "sum" : 16500
+    },
+    {
+      "name": "채민",
+      "menu": [
+        {"name": "참이슬", "price":4500},
+        {"name": "닭발", "price":4000}
+      ],
+      "sum" : 8500
+    }
+  ];
   var menuInfo;
 
   @override
