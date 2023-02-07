@@ -38,8 +38,8 @@ Future<List<Menu>> fetchMenu() async {
 }
 
 class MenuList extends StatefulWidget {
-  MenuList({Key? key, required this.peoplelist, this.shopname}) : super(key: key);
-  List<String> peoplelist;
+  MenuList({Key? key, required this.peopleList, this.shopname}) : super(key: key);
+  List<String> peopleList;
   var shopname;
 
   @override
@@ -58,40 +58,36 @@ class _MenuListState extends State<MenuList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    print("4번 페이지 initState");
     Menuapi = fetchMenu() as Future<List<Menu>>;
-    print("fetchmenu 호출");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title:Text('정보 입력'),
+          title:const Text('정보 입력'),
           centerTitle: true,
           backgroundColor: Colors.blueGrey,
         ),
         body: Center(
           child: Column(
             children: [
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Flexible(
                 flex: 1,
                 child: Text("${widget.shopname}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 17, fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               FutureBuilder(// Menu 배열 반환
                 future: Menuapi,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<Menu>? MenuArray = snapshot.data as List<Menu>?;   // 정확한 형식으로 변환
-                    print("fetchmenu 호출");
                     return Flexible(
                         flex: 12,
                         child: ListView.builder(
@@ -101,7 +97,7 @@ class _MenuListState extends State<MenuList> {
                               addPeople(a) { setState(() { peopleLabel?.add(a); }); }
                               return Card(
                                   elevation: 4.0,
-                                  color: Color(0xffFFFFFF),
+                                  color: const Color(0xffFFFFFF),
                                   margin: const EdgeInsets.fromLTRB(20, 8, 20, 8),
                                   child: Container(
                                     margin: const EdgeInsets.fromLTRB(3, 5, 3, 5),
@@ -111,24 +107,24 @@ class _MenuListState extends State<MenuList> {
                                             padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                                             child: Row(
                                               children: [
-                                                Container(
+                                                const SizedBox(
                                                     width: 40,
-                                                    child: const Center(child: Text('품목'))),
+                                                    child: Center(child: Text('품목'))),
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  child: Container(
+                                                  child: SizedBox(
                                                     height: 20,
                                                     width: 100,
                                                     child: Flexible(
                                                         child: Text(MenuArray[index].name)),
                                                   ),
                                                 ),
-                                                Container(
+                                                const SizedBox(
                                                     width: 40,
-                                                    child: const Center(child: Text('수량'))),
+                                                    child: Center(child: Text('수량'))),
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  child: Container(
+                                                  child: SizedBox(
                                                     height: 20,
                                                     width: 100,
                                                     child: Flexible(
@@ -142,12 +138,12 @@ class _MenuListState extends State<MenuList> {
                                             padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                                             child: Row(
                                                 children: [
-                                                  Container(
+                                                  const SizedBox(
                                                       width: 40,
-                                                      child: const Center(child: Text('가격'))),
+                                                      child: Center(child: Text('가격'))),
                                                   Padding(
                                                     padding: const EdgeInsets.all(8.0),
-                                                    child: Container(
+                                                    child: SizedBox(
                                                       height: 20,
                                                       width: 100,
                                                       child: Flexible(
@@ -161,9 +157,9 @@ class _MenuListState extends State<MenuList> {
                                             padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                                             child: Row(
                                               children: [
-                                                Container(
+                                                const SizedBox(
                                                     width: 40,
-                                                    child: const Center(child: Text('이름'))),
+                                                    child: Center(child: Text('이름'))),
                                                 Expanded(flex: 6,
                                                   child: Container(
                                                     padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -179,15 +175,14 @@ class _MenuListState extends State<MenuList> {
                                                   height: 20,
                                                   child: ElevatedButton(
                                                       onPressed: () {
-                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => addName(peoplelist:widget.peoplelist, peopleLabel:peopleLabel, addnameLabel:addnameLabel, addCount:addCount, addPeople:addPeople)));
-                                                        print(index);
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => addName(peopleList:widget.peopleList, peopleLabel:peopleLabel, addnameLabel:addnameLabel, addCount:addCount, addPeople:addPeople)));
                                                       },
-                                                      child: Center(child: Icon(Icons.add, size: 14, color: Colors.black,)),
                                                       style: ElevatedButton.styleFrom(
-                                                        primary: Color(0xffEEEEEE),
+                                                        primary: const Color(0xffEEEEEE),
                                                         padding: EdgeInsets.zero,
                                                         shadowColor: Colors.grey,// 버튼 여백 제거
-                                                      )
+                                                      ),
+                                                      child: const Center(child: Icon(Icons.add, size: 14, color: Colors.black,))
                                                   ),
                                                 ),
                                               ],
@@ -227,19 +222,17 @@ class _MenuListState extends State<MenuList> {
         scrollDirection: Axis.horizontal,
         itemCount: peopleLabel!.length,
         itemBuilder: (c,i){
-          print(peopleLabel[i]);
           return Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 2, 0),
               width: 35,
               decoration: BoxDecoration(
-                color: Color(0xff37b067),
+                color: const Color(0xff37b067),
                 borderRadius: BorderRadius.circular(30),
               ),
               child:
               Center(
                   child: Text(
-                    '${peopleLabel[i]}',
-                    //'${count+1}',
+                    peopleLabel[i],
                     style: const TextStyle(color: Colors.white, fontSize: 11),
                   )
               )
@@ -250,11 +243,11 @@ class _MenuListState extends State<MenuList> {
 }
 
 class buttonBox extends StatelessWidget {
-  buttonBox({Key? key}) : super(key: key);
+  const buttonBox({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
       width: double.infinity,
       height: 50,
@@ -263,7 +256,6 @@ class buttonBox extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {},
-            child: const Text('수정하기', style: TextStyle(color: Colors.black),),
             style: ElevatedButton.styleFrom(
                 fixedSize: const Size(90, 35),
                 shape: RoundedRectangleBorder(
@@ -271,9 +263,9 @@ class buttonBox extends StatelessWidget {
                 ),
                 primary: Colors.grey.shade300
             ),
+            child: const Text('수정하기', style: TextStyle(color: Colors.black),),
           ),
           ElevatedButton(
-            child: Text("확인"),
             onPressed: () {
               Navigator.push(
                 context,
@@ -287,6 +279,7 @@ class buttonBox extends StatelessWidget {
                 ),
                 primary: Colors.blueGrey
             ),
+            child: const Text("확인"),
           ),
         ],
       ),

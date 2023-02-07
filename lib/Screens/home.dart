@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
-
   final String title;
 
   @override
@@ -12,7 +11,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   int listcount = 0;
 
   @override
@@ -44,7 +42,7 @@ class _HomePageState extends State<HomePage> {
           //     },
           //   ),
           // ),
-          SizedBox(
+          const SizedBox(
               height: 30
           ),
           Center(
@@ -52,16 +50,16 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                Get.to(AddList());
               },
-              icon: Icon(Icons.add, size: 18),
-              label: Text(
+              icon: const Icon(Icons.add, size: 18),
+              label: const Text(
                 '추가하기',
                 style: TextStyle(fontSize: 20),
               ),
               style: ElevatedButton.styleFrom(
-                  minimumSize: Size(200, 100), backgroundColor: Colors.green),
+                  minimumSize: const Size(200, 100), backgroundColor: Colors.green),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           // Row(

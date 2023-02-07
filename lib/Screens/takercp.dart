@@ -6,9 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:dutch_pay_it/Screens/addInfo.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:dutch_pay_it/Model/object.dart';
-
-// 영수증 촬영 페이지
 
 class TakeRcp extends StatefulWidget {
   var key_name;
@@ -25,8 +22,6 @@ class _TakeRcpState extends State<TakeRcp> {
 
   @override
   void initState() {
-    // List<String> peopleName = widget.peoplelist;  // 구성원 리스트 from addlist
-    // var peopleCount = widget.peoplelist.length;   // 총인원수 from addlist
   }
 
   File? _image;
@@ -75,18 +70,18 @@ class _TakeRcpState extends State<TakeRcp> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               FloatingActionButton(
-                child: Icon(Icons.add_a_photo),
                 tooltip: '촬영하기',
                 onPressed: () {
                   getImage(ImageSource.camera);
                 },
+                child: const Icon(Icons.add_a_photo),
               ),
               FloatingActionButton(
-                child: Icon(Icons.wallpaper),
                 tooltip: '선택하기',
                 onPressed: () {
                   getImage(ImageSource.gallery);
                 },
+                child: const Icon(Icons.wallpaper),
               ),
             ],
           ),
@@ -96,7 +91,7 @@ class _TakeRcpState extends State<TakeRcp> {
           ElevatedButton(
             onPressed: () {
               postRequest();
-              Get.to(MenuList(peoplelist:widget.peoplelist, shopname:widget.shop));
+              Get.to(MenuList(peopleList:widget.peoplelist, shopname:widget.shop));
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue
@@ -111,7 +106,7 @@ class _TakeRcpState extends State<TakeRcp> {
     );
   }
 
-  // 이미지 전송 POST 오류
+  // 이미지 전송 POST
   Future<void> postRequest() async {
     File imageFile = File(_image!.path);
     //List<int> imageBytes = imageFile.readAsBytesSync();
@@ -136,5 +131,4 @@ class _TakeRcpState extends State<TakeRcp> {
     );
     print(response.body);
   }
-
 }
