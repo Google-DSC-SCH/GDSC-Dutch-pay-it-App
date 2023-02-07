@@ -1,13 +1,10 @@
 import 'package:dutch_pay_it/Screens/takercp.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:async/async.dart';
-import 'addInfo.dart';
 
 class AddList extends StatefulWidget {
   const AddList({Key? key}) : super(key: key);
@@ -18,15 +15,14 @@ class AddList extends StatefulWidget {
 
 class _AddListState extends State<AddList> {
   String restaurant = '';
-  TextEditingController _editingController = TextEditingController();
-  List<TextEditingController> _controllers = [];
-  List<TextField> _fields = [];
-  List<String> peoplelist = [];
+  final TextEditingController _editingController = TextEditingController();
+  final List<TextEditingController> _controllers = [];
+  final List<TextField> _fields = [];
+  List<String> peopleList = [];
   String inputText = '';
   String id = '';
 
-
-  // 디바이스 id 추출하기
+  // 디바이스 id 추출
   Future<String> getDeviceId() async {
     var deviceInfo = DeviceInfoPlugin();
     late String deviceId;
@@ -45,7 +41,6 @@ class _AddListState extends State<AddList> {
     return id;
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -61,7 +56,7 @@ class _AddListState extends State<AddList> {
 
   Widget _addTile() {
     return ListTile(
-      title: Icon(Icons.add),
+      title: const Icon(Icons.add),
       onTap: () {
         var controller = TextEditingController();
         final field = TextField(
@@ -70,13 +65,12 @@ class _AddListState extends State<AddList> {
           },
           controller: controller,
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             hintText: "구성원 ${_controllers.length + 1}",
           ),
         );
         setState(() {
           _controllers.add(controller);
-          //peoplelist.add(_controllers);
           print(_controllers.length);
           _fields.add(field);
         });
@@ -86,10 +80,10 @@ class _AddListState extends State<AddList> {
 
   Widget _removeTile() {
     return ListTile(
-      title: Icon(Icons.remove),
+      title: const Icon(Icons.remove),
       onTap: () {
         setState(() {
-          peoplelist.removeLast();
+          peopleList.removeLast();
           _fields.removeLast();
         });
       },
@@ -101,7 +95,7 @@ class _AddListState extends State<AddList> {
       itemCount: _fields.length,
       itemBuilder: (context, index) {
         return Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           child: _fields[index],
         );
       },
@@ -122,7 +116,7 @@ class _AddListState extends State<AddList> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -132,7 +126,7 @@ class _AddListState extends State<AddList> {
         );
         setState(() {});
       },
-      child: Text("OK"),
+      child: const Text("OK"),
     );
   }
 
@@ -141,37 +135,37 @@ class _AddListState extends State<AddList> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('목록 추가'),
+        title: const Text('목록 추가'),
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(35, 20, 35, 20),
+        padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
         child: Center(
           child: Column(
             children: [
-              Text(
+              const Text(
                 '식당 이름을 입력해주세요.',
                 style: TextStyle(fontSize: 20),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextField(
                 controller: _editingController,
                 keyboardType: TextInputType.text,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: '식당 이름',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
-              Text(
+              const Text(
                 '구성원 이름을 입력해주세요.',
                 style: TextStyle(fontSize: 20),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Expanded(
@@ -180,7 +174,7 @@ class _AddListState extends State<AddList> {
               _addTile(),
               _removeTile(),
               _okButton(),
-              SizedBox(
+              const SizedBox(
                 height: 1,
               ),
               ElevatedButton(
@@ -190,21 +184,19 @@ class _AddListState extends State<AddList> {
                     print('_controllers.length값 ${_controllers.length}');
                     for (int i = 0; i < _controllers.length; i++) {
                       print('_controller 리스트 값 ${_controllers[i].text}');
-                      peoplelist.add(_controllers[i].text);
-                      print('peoplelist.length개수 ${peoplelist.length}');
+                      peopleList.add(_controllers[i].text);
+                      print('peoplelist.length개수 ${peopleList.length}');
                     }
                   });
                   sendData();         // 유저키값, 식당이름, 구성원 리스트 서버로 POST
-                  Get.to(TakeRcp(peoplelist:peoplelist, key_name:id, shop:_editingController.text));
-                  //Get.to(MenuList(peoplelist:peoplelist)); // 구성원 리스트 전달
-                  //MaterialPageRoute(builder: (context) => menuList(peoplelist:peoplelist));
+                  Get.to(TakeRcp(peoplelist:peopleList, key_name:id, shop:_editingController.text));
                 },
-                child: Text(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue, minimumSize: const Size(250, 40)),
+                child: const Text(
                   '영수증 촬영하기',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, minimumSize: Size(250, 40)),
               )
             ],
           ),
@@ -222,7 +214,7 @@ class _AddListState extends State<AddList> {
     final map = jsonEncode({
       'name': id,
       'shop': _editingController.text,
-      'nameList': peoplelist,
+      'nameList': peopleList,
     });
 
     http.Response response = await http.post(

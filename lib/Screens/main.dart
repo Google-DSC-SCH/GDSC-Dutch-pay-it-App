@@ -7,11 +7,9 @@ import 'package:dutch_pay_it/Screens/home.dart';
 import 'package:dutch_pay_it/Screens/takercp.dart';
 import 'package:get/get.dart';
 
-
  void main() {
    runApp(const MyApp());
  }
-
 
 //void main() {
 //  runApp(MaterialApp(home: Scaffold(body: MenuList(peoplelist: [],))));
@@ -20,15 +18,14 @@ import 'package:get/get.dart';
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       getPages: [
-        GetPage(name: '/1', page: () => HomePage(title: '')),
-        GetPage(name: '/2', page: () => AddList()),
-        GetPage(name: '/3', page: () => TakeRcp(peoplelist: [], shop: '',)),
-        GetPage(name: '/4', page: () => MenuList(peoplelist: [])),
+        GetPage(name: '/1', page: () => const HomePage(title: '')),
+        GetPage(name: '/2', page: () => const AddList()),
+        GetPage(name: '/3', page: () => TakeRcp(peoplelist: const [], shop: '',)),
+        GetPage(name: '/4', page: () => MenuList(peopleList: const [])),
         GetPage(name: '/5', page: () => Calculate()),
       ],
       debugShowCheckedModeBanner: false,

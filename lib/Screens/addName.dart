@@ -1,11 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:dutch_pay_it/Screens/addInfo.dart';
 
 class addName extends StatefulWidget {
-
-  addName({Key? key, required this.peoplelist, required this.peopleLabel, this.addnameLabel, this.addCount, this.addPeople}) : super(key: key);
-  List<String> peoplelist;
+  addName({Key? key, required this.peopleList, required this.peopleLabel, this.addnameLabel, this.addCount, this.addPeople}) : super(key: key);
+  List<String> peopleList;
   List<String>? peopleLabel;
   var addnameLabel;
   var addCount;
@@ -28,14 +25,14 @@ class _addNameState extends State<addName> {
     setState(() {
       print("전달받은 peopleLabel");
       print(widget.peopleLabel);
-      print('리스트수 ${widget.peoplelist.length}');
-      dropdownValue = widget.peoplelist[0];
-      print('dropdown 초기 값은 ${dropdownValue}');
-      for (int i=0; i<widget.peoplelist.length; i++) {
-        print('부모로부터 전송받은 namelist:  ${widget.peoplelist[i]}');
+      print('리스트수 ${widget.peopleList.length}');
+      dropdownValue = widget.peopleList[0];
+      print('dropdown 초기 값은 $dropdownValue');
+      for (int i=0; i<widget.peopleList.length; i++) {
+        print('부모로부터 전송받은 namelist:  ${widget.peopleList[i]}');
       }
-      for (int i = 0; i < widget.peoplelist.length; i++) {
-        droplist.add(widget.peoplelist[i]);     // 전달받은 list값을 복사
+      for (int i = 0; i < widget.peopleList.length; i++) {
+        droplist.add(widget.peopleList[i]);     // 전달받은 list값을 복사
       }
     });
   }
@@ -44,59 +41,58 @@ class _addNameState extends State<addName> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text('인원 추가'),
+        title:const Text('인원 추가'),
         centerTitle: true,
         backgroundColor: Colors.blueGrey,
       ),
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
-              Text(
+              const Text(
                 //'Selected Value: $dropdownValue',
                 '추가할 사람을 선택하세요',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Container(
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 width: 150,
                 child: DropdownButton(
                     isExpanded: true,
                     value: dropdownValue,
-                    items: widget.peoplelist.map((e) => DropdownMenuItem(
+                    items: widget.peopleList.map((e) => DropdownMenuItem(
                       value: e,
                       child: Text(e),
                     )).toList(),
                     onChanged: (value) {
                       setState(() {
                         dropdownValue = value!;
-                        //change(dropdownValue);   //-----여기서 오류 발생
-                        //selected = dropdownValue;      // onchange를 통해 바뀐 값을 addDialog에 전달해야함
+                        //change(dropdownValue);
+                        //selected = dropdownValue;
                         print(dropdownValue);
                       });
                     }
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
-                child: Text("선택완료"),
                 onPressed: () {
                   setState(() {
                     //widget.peopleLabel!.length++;
                     //widget.addCount();
                     //widget.count++;
                     selected = dropdownValue;
-                    print("추가된 selected값은 ${selected}");
+                    print("추가된 selected값은 $selected");
                     //widget.peopleLabel?.add(selected);
                     widget.addPeople(selected);
                     //widget.addnameLabel(widget.peopleLabel);
@@ -113,6 +109,7 @@ class _addNameState extends State<addName> {
                     ),
                     primary: Colors.blueGrey
                 ),
+                child: const Text("선택완료"),
               ),
             ],
           ),

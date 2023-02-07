@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dutch_pay_it/Screens/main.dart';
-
 import 'home.dart';
 
 class Splash extends StatefulWidget {
@@ -18,13 +16,11 @@ class _SplashState extends State<Splash> {
   }
 
   _navigatetohome() async {
-    await Future.delayed(Duration(milliseconds: 1500), (){});
+    await Future.delayed(const Duration(milliseconds: 1500), (){});
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage(
+        context, MaterialPageRoute(builder: (context) => const HomePage(
         title : 'App',
-    )
-    )
-    );
+    )));
   }
 
   @override
@@ -32,12 +28,10 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       body: Center(
         child: Column(
-          children: [
-            Container(
-              child: Text('Duch Pay App', style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold),
-              ),
+          children: const [
+            Text('Duch Pay App', style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold),
             ),
           ],
         ),
